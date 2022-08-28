@@ -1,5 +1,6 @@
+from time import time
 import numpy as np
-from scipy.stats import gamma
+from scipy.stats import gamma, uniform, poisson, expon
 import matplotlib.pyplot as plt
 from math import exp, pow, factorial, log
 
@@ -70,6 +71,73 @@ class project(object):
         plt.ylabel('Probabilidad')
         plt.show()
 
+    def exe_3(self):
+        # poisson con distribucion exponencial para tiempos
+        lambda_ = 5 # pacientes por hora
+        inverse_cdf = lambda x: -log(1 - x) / lambda_
+        # tiempos de espera para los primeros 10 pacientes
+        times = [inverse_cdf(random.random()) for _ in range(10)]
+        for paciente in range(10):
+            if paciente == 0:
+                print(f'El tiempo para la ocurrencia del paciente {paciente+1} es {times[paciente]} horas')
+            else:
+                print(f'El tiempo entre la ocurrencia del paciente {paciente} y el {paciente+1} es {times[paciente]} horas')
+        # suma de todos los tiempos de espera
+        print(f'El tiempo total transcurrido es es {sum(times)} horas')
+        # plot de la cdf de distribucion de tiempos de espera
+        x = np.linspace(0, 2, 1000)
+        y = expon.cdf(x, scale=1/lambda_)
+        plt.plot(x, y)
+        plt.title("Distribución Exponencial")
+        plt.xlabel("Tiempo (horas)")
+        plt.ylabel("Probabilidad")
+        plt.show()
+        # tiempos para los primeros 500 pacientes
+        times = [inverse_cdf(random.random()) for _ in range(500)]
+        # grafica de dispersion de tiempos de espera
+        plt.plot(range(500), times, linestyle='solid')
+        plt.title("Tiempos de Espera")
+        plt.xlabel("Paciente")
+        plt.ylabel("Tiempo (horas)")
+        plt.show()
+        # cdf de los tiempos de espera para los primeros 500 pacientes
+        cdf_times = [sum(times[:i+1]) for i in range(len(times))]
+        plt.plot(range(500), cdf_times, linestyle='solid')
+        plt.title("CDF de Tiempos de Espera")
+        plt.xlabel("Paciente")
+        plt.ylabel("Tiempo (horas)")
+        plt.show()
+
+    def exe_4(self):
+        # simulacion de tiempos
+        lambda_ = 5 # pacientes por hora
+        inverse_cdf = lambda x: -log(1 - x) / lambda_
+        # tiempos de espera para los primeros 10 pacientes
+        times = [inverse_cdf(random.random()) for _ in range(100)]
+        cdf_times = [sum(times[:i+1]) for i in range(len(times))]
+        x = np.linspace(0, max(cdf_times), 10000)
+        # cdf_times array to numpy array
+        cdf_times = np.array(cdf_times)
+        x = np.append(x, cdf_times)
+        # order the np array
+        x.sort()
+        y = [1 if time in cdf_times else 0 for time in x]
+        plt.plot(x, y)
+        plt.title("Ocurrencias de los primeros 100 pacientes")
+        plt.xlabel("Tiempo (horas)")
+        plt.ylabel("Ocurrencia")
+        plt.show()
+        # pmf
+        patients = []
+        for i in range(100):
+            patients.append(self.poisson(i, lambda_))
+        # plot of the distribution of patients
+        plt.plot(patients)
+        plt.title("Distribución de Pacientes")
+        plt.xlabel("Paciente")
+        plt.ylabel("Probabilidad")
+        plt.show()
+
     def exe_5(self):
         k = 3 
         x = np.linspace(0, 50, 1000)
@@ -98,4 +166,4 @@ class project(object):
 
 
 aux = project()
-aux.exe_5()
+aux.exe_4()
