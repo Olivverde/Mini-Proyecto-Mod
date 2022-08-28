@@ -101,9 +101,9 @@ class project(object):
         plt.ylabel("Tiempo (horas)")
         plt.show()
         # cdf de los tiempos de espera para los primeros 500 pacientes
-        cdf_times = [sum(times[:i+1]) for i in range(len(times))]
-        plt.plot(range(500), cdf_times, linestyle='solid')
-        plt.title("CDF de Tiempos de Espera")
+        c_times = [sum(times[:i+1]) for i in range(len(times))]
+        plt.plot(range(500), c_times, linestyle='solid')
+        plt.title("Tiempos de Espera acumulados")
         plt.xlabel("Paciente")
         plt.ylabel("Tiempo (horas)")
         plt.show()
@@ -114,16 +114,16 @@ class project(object):
         inverse_cdf = lambda x: -log(1 - x) / lambda_
         # tiempos de espera para los primeros 10 pacientes
         times = [inverse_cdf(random.random()) for _ in range(100)]
-        cdf_times = [sum(times[:i+1]) for i in range(len(times))]
-        x = np.linspace(0, max(cdf_times), 10000)
-        # cdf_times array to numpy array
-        cdf_times = np.array(cdf_times)
-        x = np.append(x, cdf_times)
+        c_times = [sum(times[:i+1]) for i in range(len(times))]
+        x = np.linspace(0, max(c_times), 10000)
+        # c_times array to numpy array
+        c_times = np.array(c_times)
+        x = np.append(x, c_times)
         # order the np array
         x.sort()
-        y = [1 if time in cdf_times else 0 for time in x]
+        y = [1 if time in c_times else 0 for time in x]
         plt.plot(x, y)
-        plt.title("Ocurrencias de los primeros 100 pacientes")
+        plt.title("Simulación de currencias de los primeros 100 pacientes")
         plt.xlabel("Tiempo (horas)")
         plt.ylabel("Ocurrencia")
         plt.show()
